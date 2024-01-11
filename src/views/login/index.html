@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div class="card">
+      <div class="w-80 m-9">
+        <img
+          class="w-10 mb-2 mx-auto"
+          src="../../assets/images/userImage.png"
+        />
+
+        <div class="m-auto w-60">
+          <form class="py-2.5">
+            <div class="text-field">
+              <label htmlFor="email">Email:</label>
+              <input type="email" id="email" placeholder="abcd@gmail.com" />
+            </div>
+
+            <div class="text-field">
+              <label class="label-m" htmlFor="password"> Password: </label>
+              <div class="flex bg-blackPearl-600 rounded">
+                <input type="password" id="password" placeholder="password" />
+                <a href="#" class="password-toggle-icon p-1"
+                  ><i class="ph-bold ph-eye"></i
+                ></a>
+              </div>
+            </div>
+
+            <button>Login</button>
+          </form>
+          <hr />
+        </div>
+      </div>
+      <img class="w-96 my-auto" src="../../assets/images/login-signup.png" />
+    </div>
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <script src="./main.ts" type="module"></script>
+  </body>
+</html>
