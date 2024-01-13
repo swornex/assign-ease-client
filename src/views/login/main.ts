@@ -1,6 +1,11 @@
 import "../../style.css";
 
 import axios from "axios";
+import { decodeUserName, decodedRole } from "../../utils/decodeUser";
+
+if (localStorage.getItem("token")) {
+  window.location.href = "../dashboard/";
+}
 
 const email = document.querySelector<HTMLInputElement>("#email");
 const password = document.querySelector<HTMLInputElement>("#password");
@@ -29,6 +34,12 @@ loginButton?.addEventListener("click", async (e) => {
   console.log(email?.value, password?.value);
 
   const res = await axios.post(loginUrl, userData);
+  console.log(res);
 
-  console.log(res.data.data.accessToken);
+  if (res.status === 200) {
+    localStorage.setItem("token", res.data.data.accessToken);
+    decodeUserName();
+    decodedRole();
+    window.location.href = "../dashboard/";
+  }
 });

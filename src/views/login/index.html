@@ -16,23 +16,32 @@
         <div class="m-auto w-60">
           <form class="py-2.5">
             <div class="text-field">
-              <label htmlFor="email">Email:</label>
-              <input type="email" id="email" placeholder="abcd@gmail.com" />
+              <label for="email" class="label-fw">Email:</label>
+              <input
+                type="email"
+                id="email"
+                placeholder="abcd@gmail.com"
+                class="login-input"
+              />
             </div>
 
             <div class="text-field">
-              <label class="label-m" htmlFor="password"> Password: </label>
+              <label class="label-m label-fw" for="password"> Password: </label>
               <div class="flex bg-blackPearl-600 rounded">
-                <input type="password" id="password" placeholder="password" />
+                <input
+                  type="password"
+                  id="password"
+                  placeholder="password"
+                  class="login-input"
+                />
                 <a href="#" class="password-toggle-icon p-1"
-                  ><i class="ph-bold ph-eye"></i
-                ></a>
+                  ><i class="ph-bold ph-eye"></i>
+                </a>
               </div>
             </div>
 
             <button>Login</button>
           </form>
-          <hr />
         </div>
       </div>
       <img class="w-96 my-auto" src="../../assets/images/login-signup.png" />
