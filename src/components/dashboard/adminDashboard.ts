@@ -3,14 +3,15 @@ const renderAdminDashboard = (dashboard: HTMLElement, assignments: any) => {
     <table class="w-full">
       <tr>
         <th class="p-2">Assignment Name</th>
-        <th class="p-2">Status</th>
+        <th class="p-2">Deadline</th>
       </tr>
       ${assignments
         .map(
-          (assignment: any, index: number) => `
+          (assignment: any) => `
         <tr>
           <td class="p-2">${assignment.title}</td>
-          <td class="p-2">${assignment.submissions[index].status}</td>
+          <td class="p-2">${assignment.deadline}</td>
+          <a href="#"><td class="p-2">edit</td></a>
         </tr>
       `
         )
@@ -20,3 +21,5 @@ const renderAdminDashboard = (dashboard: HTMLElement, assignments: any) => {
 };
 
 export default renderAdminDashboard;
+
+//<td class="p-2">${assignment.submissions[index].status}</td>

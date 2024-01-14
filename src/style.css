@@ -13,9 +13,8 @@
   }
 
   body {
-    @apply bg-neutral-200 h-screen;
+    @apply h-full;
   }
-
   span {
     @apply text-sm;
   }
@@ -73,6 +72,14 @@
 
   .active {
     @apply bg-neutral-600 text-whitePearl-400;
+  }
+
+  .section-sidebar {
+    @apply bg-white border-r border-blackPearl-700 col-span-1;
+  }
+
+  .section-main {
+    @apply bg-white col-start-2 col-span-3;
   }
 
   button {
