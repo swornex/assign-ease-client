@@ -1,10 +1,12 @@
 import "../../../style.css";
 
-import { getAccessToken } from "../../../utils/token";
-import axios, { AxiosError } from "axios";
+import { AxiosError } from "axios";
 import sidebar from "../../../utils/sidebar";
 import checkAuth from "../../../utils/checkAuth";
 import { showToast } from "../../../utils/showToast";
+import { getUserAssignmentStatus } from "../../../services/evaluate";
+import { submitAssignment } from "../../../services/assignment";
+import checkRole from "../../../utils/checkRole";
 
 const sidebarElement = document.querySelector<HTMLElement>(".section-sidebar");
 const submitAssignmentUrl = document.querySelector<HTMLInputElement>("#url");
@@ -17,16 +19,11 @@ const toast = document.getElementById("toast");
 const submissionForm =
   document.querySelector<HTMLFormElement>(".submission-form");
 
-const accessToken = getAccessToken();
-
 const urlParams = new URLSearchParams(window.location.search);
 const assignmentId = urlParams.get("assignmentId");
 
-const userAssignmentStatusUrl =
-  "http://localhost:3000/api/user-assignment-status";
-const submissionUrl = "http://localhost:3000/api/submissions";
-
 checkAuth();
+checkRole("User");
 
 window.onload = async () => {
   sidebar(sidebarElement);
@@ -35,77 +32,72 @@ window.onload = async () => {
     return;
   }
 
-  const res = await axios.get(userAssignmentStatusUrl, {
-    headers: {
-      Authorization: `Bearer ${accessToken}`
-    },
-    params: {
-      assignmentId
+  try {
+    const res = await getUserAssignmentStatus(assignmentId);
+
+    const assignment = res.data.data;
+
+    if (assignment.assignmentStatus !== "Pending") {
+      submitButton.remove();
+      submitAssignmentUrl.value = assignment.submissionUrl;
+      submitAssignmentUrl.classList.add("cursor-not-allowed");
+      submitAssignmentUrl.readOnly = true;
     }
-  });
 
-  const assignment = res.data.data;
+    const assignmentInfo = document.createElement("div");
+    assignmentInfo.classList.add("flex", "flex-col", "gap-4");
 
-  if (assignment.assignmentStatus !== "Pending") {
-    submitButton.remove();
-    submitAssignmentUrl.value = assignment.submissionUrl;
-    submitAssignmentUrl.classList.add("cursor-not-allowed");
-    submitAssignmentUrl.readOnly = true;
-  }
+    const titleWrapper = document.createElement("div");
+    titleWrapper.classList.add("flex");
 
-  const assignmentInfo = document.createElement("div");
-  assignmentInfo.classList.add("flex", "flex-col", "gap-4");
+    const title = document.createElement("h3");
+    title.innerText = assignment.title;
 
-  const titleWrapper = document.createElement("div");
-  titleWrapper.classList.add("flex");
+    const status = document.createElement("span");
+    status.classList.add(
+      "ml-auto",
+      "border",
+      "border-black",
+      "p-2",
+      "rounded-full"
+    );
+    status.innerText = assignment.assignmentStatus;
 
-  const title = document.createElement("h3");
-  title.innerText = assignment.title;
+    const description = document.createElement("p");
+    description.innerText = assignment.description;
 
-  const status = document.createElement("span");
-  status.classList.add(
-    "ml-auto",
-    "border",
-    "border-black",
-    "p-2",
-    "rounded-full"
-  );
-  status.innerText = assignment.assignmentStatus;
+    const deadline = document.createElement("span");
+    deadline.innerText = `Deadline: ${assignment.deadline}`;
 
-  const description = document.createElement("p");
-  description.innerText = assignment.description;
+    titleWrapper.appendChild(title);
+    titleWrapper.appendChild(status);
+    assignmentInfo.appendChild(titleWrapper);
+    assignmentInfo.appendChild(description);
+    assignmentInfo.appendChild(deadline);
 
-  const deadline = document.createElement("span");
-  deadline.innerText = `Deadline: ${assignment.deadline}`;
+    submissionWrapper?.insertBefore(assignmentInfo, submissionForm);
 
-  titleWrapper.appendChild(title);
-  titleWrapper.appendChild(status);
-  assignmentInfo.appendChild(titleWrapper);
-  assignmentInfo.appendChild(description);
-  assignmentInfo.appendChild(deadline);
+    submitButton?.addEventListener("click", async (e) => {
+      e.preventDefault();
+      const submissionData = {
+        submissionUrl: submitAssignmentUrl?.value,
+        assignmentId: assignmentId
+      };
 
-  submissionWrapper?.insertBefore(assignmentInfo, submissionForm);
+      try {
+        await submitAssignment(submissionData);
 
-  submitButton?.addEventListener("click", async (e) => {
-    e.preventDefault();
-    const submissionData = {
-      submissionUrl: submitAssignmentUrl?.value,
-      assignmentId: assignmentId
-    };
-
-    try {
-      await axios.post(submissionUrl, submissionData, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`
+        window.location.href = "/views/assignments/";
+        showToast(toast, "Assignment submitted successfully");
+      } catch (e) {
+        if (e instanceof AxiosError) {
+          showToast(toast, e.response?.data.message);
         }
-      });
-      window.location.href = "/views/assignments/";
-      showToast(toast, "Assignment submitted successfully");
-    } catch (e) {
-      if (e instanceof AxiosError) {
-        console.log(e);
-        showToast(toast, e.response?.data.message);
       }
+    });
+  } catch (e) {
+    if (e instanceof AxiosError) {
+      showToast(toast, e.response?.data.message);
     }
-  });
+  }
 };

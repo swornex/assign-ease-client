@@ -1,20 +1,19 @@
-import axios, { AxiosError } from "axios";
 import "../../style.css";
 import sidebar from "../../utils/sidebar";
-import { getAccessToken } from "../../utils/token";
 import checkAuth from "../../utils/checkAuth";
 import { IUserAssignmentStatus } from "../../interfaces/IUserAssignmentStatus";
 import { ISubmission } from "../../interfaces/ISubmission";
 import { showToast } from "../../utils/showToast";
+import { getSubmissions } from "../../services/submission";
+import { AxiosError } from "axios";
+import checkRole from "../../utils/checkRole";
 
 const sidebarElement = document.querySelector<HTMLElement>(".section-sidebar");
 const mainSection = document.querySelector<HTMLElement>(".section-main");
 const toast = document.getElementById("toast");
 
-const accessToken = getAccessToken();
-const submissionUrl = "http://localhost:3000/api/dashboard";
-
 checkAuth();
+checkRole("Admin");
 
 window.onload = async () => {
   sidebar(sidebarElement);
@@ -24,11 +23,7 @@ window.onload = async () => {
   }
 
   try {
-    const res = await axios.get(submissionUrl, {
-      headers: {
-        Authorization: `Bearer ${accessToken}`
-      }
-    });
+    const res = await getSubmissions();
 
     const assignments = res.data.data;
 
@@ -97,7 +92,6 @@ window.onload = async () => {
     });
   } catch (e) {
     if (e instanceof AxiosError) {
-      console.log(e);
       showToast(toast, e.response?.data.message);
     }
   }

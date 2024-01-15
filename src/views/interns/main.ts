@@ -1,18 +1,17 @@
-import axios, { AxiosError } from "axios";
+import { AxiosError } from "axios";
 import "../../style.css";
 import sidebar from "../../utils/sidebar";
-import { getAccessToken } from "../../utils/token";
 import checkAuth from "../../utils/checkAuth";
 import { IUserWithFullName } from "../../interfaces/IUser";
 import { showToast } from "../../utils/showToast";
+import { deleteUser, getUser } from "../../services/intern";
+import checkRole from "../../utils/checkRole";
 
 const sidebarElement = document.querySelector<HTMLElement>(".section-sidebar");
 const toast = document.getElementById("toast");
 
-const accessToken = getAccessToken();
-const submissionUrl = "http://localhost:3000/api/users";
-
 checkAuth();
+checkRole("Admin");
 
 window.onload = async () => {
   const internCard = document.querySelector<HTMLElement>("#intern-card");
@@ -23,18 +22,9 @@ window.onload = async () => {
     return;
   }
   try {
-    const res = await axios.get(submissionUrl, {
-      headers: {
-        Authorization: `Bearer ${accessToken}`
-      },
-      params: {
-        role: "User"
-      }
-    });
+    const res = await getUser();
 
     const users = res.data.data;
-
-    console.log(users);
 
     const el = document.createElement("div");
     el.classList.add(
@@ -91,17 +81,12 @@ window.onload = async () => {
 
         if (userId) {
           try {
+            await deleteUser(userId);
             showToast(toast, "User deleted successfully");
 
-            await axios.delete(`http://localhost:3000/api/users/${userId}`, {
-              headers: {
-                Authorization: `Bearer ${accessToken}`
-              }
-            });
             window.location.reload();
           } catch (e) {
             if (e instanceof AxiosError) {
-              console.log(e);
               showToast(toast, e.response?.data.message);
             }
           }
@@ -112,7 +97,6 @@ window.onload = async () => {
     internCard?.appendChild(el);
   } catch (e) {
     if (e instanceof AxiosError) {
-      console.log(e);
       showToast(toast, e.response?.data.message);
     }
   }

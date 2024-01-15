@@ -1,23 +1,18 @@
-import axios, { AxiosError } from "axios";
+import { AxiosError } from "axios";
 import "../../style.css";
 import { decodedRole } from "../../utils/decodeUser";
 import renderUserDashboard from "../../components/dashboard/userDashboard";
 import renderAdminDashboard from "../../components/dashboard/adminDashboard";
 import sidebar from "../../utils/sidebar";
-import { getAccessToken } from "../../utils/token";
 import checkAuth from "../../utils/checkAuth";
 import { showToast } from "../../utils/showToast";
+import { getDashboardData } from "../../services/dashboard";
 
 const sidebarElement = document.querySelector<HTMLElement>(".section-sidebar");
 const mainSection = document.querySelector<HTMLElement>(".section-main");
 const toast = document.getElementById("toast");
 
-const accessToken = getAccessToken();
 const role = decodedRole();
-const dashboardUrl =
-  role === "User"
-    ? "http://localhost:3000/api/dashboard"
-    : "http://localhost:3000/api/assignments";
 
 checkAuth();
 window.onload = async () => {
@@ -31,11 +26,7 @@ window.onload = async () => {
   sidebar(sidebarElement);
 
   try {
-    const res = await axios.get(dashboardUrl, {
-      headers: {
-        Authorization: `Bearer ${accessToken}`
-      }
-    });
+    const res = await getDashboardData();
 
     const buttonWrapper = document.createElement("div");
     buttonWrapper.classList.add("flex");
@@ -77,7 +68,6 @@ window.onload = async () => {
     assignmentCard?.appendChild(el);
   } catch (e) {
     if (e instanceof AxiosError) {
-      console.log(e);
       showToast(toast, e.response?.data.message);
     }
   }

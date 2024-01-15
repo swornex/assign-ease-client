@@ -1,5 +1,11 @@
 import { IUserDashboard } from "../../interfaces/IUserDashboard";
 
+/**
+ * Render the user dashboard with the provided assignments.
+ *
+ * @param {HTMLElement} dashboard - The HTML element where the dashboard will be rendered.
+ * @param {IUserDashboard[]} assignments - An array of user dashboard objects containing assignment information.
+ */
 const renderUserDashboard = (
   dashboard: HTMLElement,
   assignments: IUserDashboard[]

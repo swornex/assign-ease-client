@@ -1,12 +1,16 @@
 import { decodeUserName, decodedRole } from "../../utils/decodeUser";
 
+/**
+ * Renders the sidebar by updating the HTML of the provided sidebar element.
+ *
+ * @param {HTMLElement} sidebar - The HTMLElement that represents the sidebar.
+ */
 const renderSideBar = (sidebar: HTMLElement) => {
   // Get the current path or URL
   const currentPath = window.location.pathname;
 
   const [, , path] = currentPath.split("/");
 
-  console.log(path);
   sidebar.innerHTML = `
     <nav class="py-8 h-full fixed w-1/4 grid">
       <div class="flex flex-col gap-3 items-center">

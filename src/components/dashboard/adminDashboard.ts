@@ -1,5 +1,11 @@
 import { IAdminDashboard } from "../../interfaces/IAdminDashboard";
 
+/**
+ * Renders the admin dashboard with the given assignments.
+ *
+ * @param {HTMLElement} dashboard - The HTML element where the dashboard will be rendered.
+ * @param {IAdminDashboard[]} assignments - An array of assignments to be displayed on the dashboard.
+ */
 const renderAdminDashboard = (
   dashboard: HTMLElement,
   assignments: IAdminDashboard[]

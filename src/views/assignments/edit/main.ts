@@ -2,9 +2,13 @@ import "../../../style.css";
 
 import sidebar from "../../../utils/sidebar";
 import checkAuth from "../../../utils/checkAuth";
-import axios, { AxiosError } from "axios";
-import { getAccessToken } from "../../../utils/token";
+import { AxiosError } from "axios";
 import { showToast } from "../../../utils/showToast";
+import {
+  editAssignment,
+  getAssignmentById
+} from "../../../services/assignment";
+import checkRole from "../../../utils/checkRole";
 
 const sidebarElement = document.querySelector<HTMLElement>(".section-sidebar");
 const title = document.querySelector<HTMLInputElement>("#title");
@@ -15,14 +19,8 @@ const toast = document.getElementById("toast");
 
 const id = new URLSearchParams(window.location.search).get("assignmentId");
 
-const assignmentUrl = `http://localhost:3000/api/assignments/${id}`;
-const updateAssignmentUrl = `http://localhost:3000/api/assignments/${id}`;
-
-const accessToken = getAccessToken();
-
-console.log(updateAssignmentUrl);
-
 checkAuth();
+checkRole("Admin");
 
 window.onload = async () => {
   sidebar(sidebarElement);
@@ -31,41 +29,32 @@ window.onload = async () => {
     return;
   }
 
-  const res = await axios.get(assignmentUrl, {
-    headers: {
-      Authorization: `Bearer ${accessToken}`
-    }
-  });
+  try {
+    const res = await getAssignmentById(id);
 
-  const assignment = res.data.data;
+    const assignment = res.data.data;
 
-  title.value = assignment.title;
-  description.value = assignment.description;
-  deadline.value = assignment.deadline;
+    title.value = assignment.title;
+    description.value = assignment.description;
+    deadline.value = assignment.deadline;
 
-  editButton?.addEventListener("click", async (e) => {
-    e.preventDefault();
+    editButton?.addEventListener("click", async (e) => {
+      e.preventDefault();
 
-    const assignmentData = {
-      title: title?.value,
-      description: description?.value,
-      deadline: deadline?.value
-    };
+      const assignmentData = {
+        title: title?.value,
+        description: description?.value,
+        deadline: deadline?.value
+      };
 
-    try {
-      await axios.patch(updateAssignmentUrl, assignmentData, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`
-        }
-      });
+      await editAssignment(id, assignmentData);
 
       window.location.href = "views/assignments/";
       showToast(toast, "Assignment updated successfully");
-    } catch (e) {
-      if (e instanceof AxiosError) {
-        console.log(e);
-        showToast(toast, e.response?.data.message);
-      }
+    });
+  } catch (e) {
+    if (e instanceof AxiosError) {
+      showToast(toast, e.response?.data.message);
     }
-  });
+  }
 };

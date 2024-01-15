@@ -1,8 +1,9 @@
 import "../../style.css";
 
-import axios, { AxiosError } from "axios";
 import { decodeUserName, decodedRole } from "../../utils/decodeUser";
 import { showToast } from "../../utils/showToast";
+import { login } from "../../services/login";
+import { AxiosError } from "axios";
 
 if (localStorage.getItem("token")) {
   window.location.href = "views/assignments/";
@@ -17,8 +18,6 @@ const togglePassword = document.querySelector<HTMLAnchorElement>(
 const toast = document.getElementById("toast");
 
 const loginButton = document.querySelector<HTMLButtonElement>("button");
-
-const loginUrl = "http://localhost:3000/api/auth/login";
 
 togglePassword?.addEventListener("click", (e) => {
   e.preventDefault();
@@ -36,8 +35,7 @@ loginButton?.addEventListener("click", async (e) => {
   };
 
   try {
-    const res = await axios.post(loginUrl, userData);
-
+    const res = await login(userData);
     if (!toast) {
       return;
     }
@@ -53,7 +51,6 @@ loginButton?.addEventListener("click", async (e) => {
     }
 
     if (e instanceof AxiosError) {
-      console.log(e);
       showToast(toast, e.response?.data.message);
     }
   }

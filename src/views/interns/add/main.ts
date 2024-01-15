@@ -1,10 +1,11 @@
 import "../../../style.css";
 
-import axios, { AxiosError } from "axios";
-import { getAccessToken } from "../../../utils/token";
+import { AxiosError } from "axios";
 import sidebar from "../../../utils/sidebar";
 import checkAuth from "../../../utils/checkAuth";
 import { showToast } from "../../../utils/showToast";
+import { createUser } from "../../../services/intern";
+import checkRole from "../../../utils/checkRole";
 
 const sidebarElement = document.querySelector<HTMLElement>(".section-sidebar");
 const firstName = document.querySelector<HTMLInputElement>("#firstName");
@@ -17,11 +18,8 @@ const toast = document.getElementById("toast");
 const togglePassword =
   document.querySelector<HTMLInputElement>("#showPassword");
 
-const createAccUrl = "http://localhost:3000/api/users";
-
-const accessToken = getAccessToken();
-
 checkAuth();
+checkRole("Admin");
 
 window.onload = () => {
   sidebar(sidebarElement);
@@ -47,17 +45,12 @@ window.onload = () => {
     };
 
     try {
-      await axios.post(createAccUrl, userData, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`
-        }
-      });
+      await createUser(userData);
 
       window.location.href = "/views/interns/";
       showToast(toast, "Intern added successfully");
     } catch (e) {
       if (e instanceof AxiosError) {
-        console.log(e);
         showToast(toast, e.response?.data.message);
       }
     }
