@@ -4,7 +4,7 @@ import axios from "axios";
 import { decodeUserName, decodedRole } from "../../utils/decodeUser";
 
 if (localStorage.getItem("token")) {
-  window.location.href = "../dashboard/";
+  window.location.href = "views/assignments/";
 }
 
 const email = document.querySelector<HTMLInputElement>("#email");
@@ -31,15 +31,13 @@ loginButton?.addEventListener("click", async (e) => {
     email: email?.value,
     password: password?.value
   };
-  console.log(email?.value, password?.value);
 
   const res = await axios.post(loginUrl, userData);
-  console.log(res);
 
   if (res.status === 200) {
     localStorage.setItem("token", res.data.data.accessToken);
     decodeUserName();
     decodedRole();
-    window.location.href = "../dashboard/";
+    window.location.href = "views/assignments/";
   }
 });

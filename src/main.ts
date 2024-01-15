@@ -1,12 +1,12 @@
 import "./style.css";
+import { getAccessToken } from "./utils/token";
 
 window.onload = () => {
-  const accessToken = localStorage.getItem("token");
+  const accessToken = getAccessToken();
 
-  console.log(accessToken);
   if (!accessToken) {
     window.location.href = "/views/login/";
   } else {
-    window.location.href = "/views/dashboard/";
+    window.location.href = "/views/assignments/";
   }
 };

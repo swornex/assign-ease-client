@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Assign-Ease</title>
+  </head>
+  <body>
+    <div class="bg-neutral-200 grid grid-cols-4 h-full min-h-screen">
+      <section class="section-sidebar"></section>
+      <section class="section-main">
+        <h1 class="text-4xl px-8">Evaluate</h1>
+        <div class="px-8 mt-8 form-wrapper">
+          <form class="py-2.5 w-full" id="form">
+            <div>
+              <label class="label-fw">Problem Solving:</label>
+              <div class="flex justify-between">
+                <div class="radio-button">
+                  <input
+                    type="radio"
+                    name="problemSolving"
+                    id="problemSolving1"
+                    value="1"
+                  />
+                  <label for="problemSolving1">1</label>
+                </div>
+                <div class="radio-button">
+                  <input
+                    type="radio"
+                    name="problemSolving"
+                    id="problemSolving2"
+                    value="2"
+                  />
+                  <label for="problemSolving2">2</label>
+                </div>
+                <div class="radio-button">
+                  <input
+                    type="radio"
+                    name="problemSolving"
+                    id="problemSolving3"
+                    value="3"
+                  />
+                  <label for="problemSolving3">3</label>
+                </div>
+                <div class="radio-button">
+                  <input
+                    type="radio"
+                    name="problemSolving"
+                    id="problemSolving4"
+                    value="4"
+                  />
+                  <label for="problemSolving4">4</label>
+                </div>
+              </div>
+            </div>
+
+            <div class="mt-4">
+              <label class="label-fw">Code Quality:</label>
+              <div class="flex justify-between">
+                <div class="radio-button">
+                  <input
+                    type="radio"
+                    name="codeQuality"
+                    id="codeQuality1"
+                    value="1"
+                  />
+                  <label for="codeQuality1">1</label>
+                </div>
+                <div class="radio-button">
+                  <input
+                    type="radio"
+                    name="codeQuality"
+                    id="codeQuality2"
+                    value="2"
+                  />
+                  <label for="codeQuality2">2</label>
+                </div>
+                <div class="radio-button">
+                  <input
+                    type="radio"
+                    name="codeQuality"
+                    id="codeQuality3"
+                    value="3"
+                  />
+                  <label for="codeQuality3">3</label>
+                </div>
+                <div class="radio-button">
+                  <input
+                    type="radio"
+                    name="codeQuality"
+                    id="codeQuality4"
+                    value="4"
+                  />
+                  <label for="codeQuality4">4</label>
+                </div>
+              </div>
+            </div>
+
+            <div class="mt-4">
+              <label class="label-fw">Final Product:</label>
+              <div class="flex justify-between">
+                <div class="radio-button">
+                  <input
+                    type="radio"
+                    name="finalProduct"
+                    id="finalProduct1"
+                    value="1"
+                  />
+                  <label for="finalProduct1">1</label>
+                </div>
+                <div class="radio-button">
+                  <input
+                    type="radio"
+                    name="finalProduct"
+                    id="finalProduct2"
+                    value="2"
+                  />
+                  <label for="finalProduct2">2</label>
+                </div>
+                <div class="radio-button">
+                  <input
+                    type="radio"
+                    name="finalProduct"
+                    id="finalProduct3"
+                    value="3"
+                  />
+                  <label for="finalProduct3">3</label>
+                </div>
+                <div class="radio-button">
+                  <input
+                    type="radio"
+                    name="finalProduct"
+                    id="finalProduct4"
+                    value="4"
+                  />
+                  <label for="finalProduct4">4</label>
+                </div>
+              </div>
+            </div>
+
+            <div class="mt-4">
+              <label for="remarks" class="label-fw">Remarks:</label>
+              <input type="text" id="remarks" class="input" />
+            </div>
+            <button class="py-2 px-8 mt-8">Evaluate</button>
+          </form>
+        </div>
+      </section>
+    </div>
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <script src="./main.ts" type="module"></script>
+  </body>
+</html>

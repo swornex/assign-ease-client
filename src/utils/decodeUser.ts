@@ -1,8 +1,9 @@
 import { jwtDecode } from "jwt-decode";
 import { IDecodedUser } from "../interfaces/IDecodedUser";
+import { getAccessToken } from "./token";
 
 export function decodeUser() {
-  const accessToken = localStorage.getItem("token");
+  const accessToken = getAccessToken();
   if (accessToken) {
     const decodedUser = jwtDecode<IDecodedUser>(accessToken);
     return decodedUser.data;
@@ -12,7 +13,7 @@ export function decodeUser() {
 export function decodeUserName() {
   const firstName = decodeUser()?.firstName;
   const lastName = decodeUser()?.lastName;
-  const fullName = firstName + " " + lastName;
+  const fullName = lastName ? firstName + " " + lastName : firstName;
 
   return fullName;
 }

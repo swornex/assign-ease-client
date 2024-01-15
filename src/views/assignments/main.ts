@@ -4,20 +4,20 @@ import { decodedRole } from "../../utils/decodeUser";
 import renderUserDashboard from "../../components/dashboard/userDashboard";
 import renderAdminDashboard from "../../components/dashboard/adminDashboard";
 import sidebar from "../../utils/sidebar";
+import { getAccessToken } from "../../utils/token";
+import checkAuth from "../../utils/checkAuth";
 
 const sidebarElement = document.querySelector<HTMLElement>(".section-sidebar");
 const mainSection = document.querySelector<HTMLElement>(".section-main");
 
-const accessToken = localStorage.getItem("token");
+const accessToken = getAccessToken();
 const role = decodedRole();
 const dashboardUrl =
   role === "User"
     ? "http://localhost:3000/api/dashboard"
     : "http://localhost:3000/api/assignments";
 
-if (!accessToken) {
-  window.location.href = "../login/";
-}
+checkAuth();
 window.onload = async () => {
   const assignmentCard =
     document.querySelector<HTMLElement>("#assignment-card");
@@ -29,22 +29,26 @@ window.onload = async () => {
     }
   });
 
-  const addButton = document.createElement("button");
+  const buttonWrapper = document.createElement("div");
+  buttonWrapper.classList.add("flex");
+
+  const addButton = document.createElement("a");
   addButton.classList.add(
-    "bg-neutral-300",
-    "hover:bg-neutral-500",
     "mr-8",
-    "text-black"
+    "ml-auto",
+    "p-2",
+    "rounded-md",
+    "bg-blackPearl-600",
+    "text-neutral-200",
+    "hover:bg-blackPearl-700"
   );
   addButton.innerText = "Add Assignment";
+  addButton.href = "/views/assignments/add/";
 
+  buttonWrapper.appendChild(addButton);
   if (role === "Admin") {
-    mainSection?.insertBefore(addButton, assignmentCard);
+    mainSection?.insertBefore(buttonWrapper, assignmentCard);
   }
-
-  addButton.addEventListener("click", () => {
-    window.location.href = "../add-assignment/";
-  });
 
   const assignments = res.data.data;
 

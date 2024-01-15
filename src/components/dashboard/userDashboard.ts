@@ -1,28 +1,30 @@
-const renderUserDashboard = (dashboard: HTMLElement, assignments: any) => {
-  dashboard.innerHTML = `<table class="w-full cell">
-    <tr>
-      <th class="p-2">Assignment Name</th>
-      <th class="p-2">Average Score</th>
-      <th class="p-2">Status</th>
-    </tr>
+import { IUserDashboard } from "../../interfaces/IUserDashboard";
+
+const renderUserDashboard = (
+  dashboard: HTMLElement,
+  assignments: IUserDashboard[]
+) => {
+  dashboard.innerHTML = `<div class="flex flex-wrap gap-4 flex-col">
     ${assignments
       .map(
-        (assignment: any) => `
-      <tr>
-      <td class="p-2">${assignment.title}</td>
-      <td class="p-2">${
-        assignment.avgPoints === null ? 0 : assignment.avgPoints
-      }</td>
-      <td class="p-2">${assignment.status}</td>
-    </tr>
+        (assignment: IUserDashboard) => `
+        <a href="/views/assignments/submit/?assignmentId=${
+          assignment.assignmentId
+        }">
+      <div class="bg-white p-4 rounded-md shadow-md">
+        <div class="flex justify-between items-center mb-2">
+          <h3 class="text-xl font-semibold mb-2">${assignment.title}</h3>
+          <p class="text-gray-600">Status: ${assignment.assignmentStatus}</p>
+        </div>
+        <p class="text-gray-600 mb-2">Average Score: ${
+          assignment.avgPoints ?? 0
+        }</p>
+      </div>
+      </a>
       `
       )
       .join("")}
-
-    
-  </table>
-  
-  `;
+  </div>`;
 };
 
 export default renderUserDashboard;

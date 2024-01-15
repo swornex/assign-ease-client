@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Assign-Ease</title>
+  </head>
+  <body>
+    <div class="bg-neutral-200 grid grid-cols-4 h-full min-h-screen">
+      <section class="section-sidebar"></section>
+      <section class="section-main">
+        <h1 class="text-4xl px-8">Add Assignment</h1>
+        <div class="px-8 mt-8">
+          <form class="py-2.5 w-full">
+            <div class="w-full mt-4">
+              <label for="title" class="label-fw">Assignment Title:</label>
+              <input type="text" id="title" placeholder="CRUD" class="input" />
+            </div>
+
+            <div class="w-full mt-4">
+              <label for="description" class="label-fw">Description:</label>
+              <textarea
+                id="description"
+                placeholder="Complete CRUD for Todo"
+                class="input"
+              ></textarea>
+            </div>
+
+            <div class="w-full mt-3">
+              <label for="deadline" class="label-fw">Deadline:</label>
+              <input type="date" id="deadline" class="input" />
+            </div>
+
+            <button class="py-2 px-8 mt-8">Add</button>
+          </form>
+        </div>
+      </section>
+    </div>
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <script src="./main.ts" type="module"></script>
+  </body>
+</html>

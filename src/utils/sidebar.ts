@@ -11,7 +11,7 @@ const sidebar = (sidebarElement: HTMLElement | null) => {
 
   logout?.addEventListener("click", () => {
     localStorage.removeItem("token");
-    window.location.href = "../login/";
+    window.location.href = "/views/login/";
   });
 };
 
