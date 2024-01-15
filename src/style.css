@@ -94,6 +94,19 @@
     text-align: center;
   }
 
+  #toast {
+    display: none;
+    position: fixed;
+    bottom: 16px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #333;
+    color: #fff;
+    padding: 12px;
+    border-radius: 4px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  }
+
   .label-m {
     @apply mt-2;
   }

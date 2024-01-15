@@ -1,9 +1,10 @@
 import "../../../style.css";
 
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { getAccessToken } from "../../../utils/token";
 import sidebar from "../../../utils/sidebar";
 import checkAuth from "../../../utils/checkAuth";
+import { showToast } from "../../../utils/showToast";
 
 const sidebarElement = document.querySelector<HTMLElement>(".section-sidebar");
 const firstName = document.querySelector<HTMLInputElement>("#firstName");
@@ -11,6 +12,8 @@ const lastName = document.querySelector<HTMLInputElement>("#lastName");
 const email = document.querySelector<HTMLInputElement>("#email");
 const password = document.querySelector<HTMLInputElement>("#password");
 const addButton = document.querySelector<HTMLButtonElement>("button");
+const toast = document.getElementById("toast");
+
 const togglePassword =
   document.querySelector<HTMLInputElement>("#showPassword");
 
@@ -22,6 +25,10 @@ checkAuth();
 
 window.onload = () => {
   sidebar(sidebarElement);
+
+  if (!toast) {
+    return;
+  }
 
   togglePassword?.addEventListener("click", () => {
     const type =
@@ -39,14 +46,20 @@ window.onload = () => {
       password: password?.value
     };
 
-    const res = await axios.post(createAccUrl, userData, {
-      headers: {
-        Authorization: `Bearer ${accessToken}`
-      }
-    });
+    try {
+      await axios.post(createAccUrl, userData, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`
+        }
+      });
 
-    if (res.status === 200) {
       window.location.href = "/views/interns/";
+      showToast(toast, "Intern added successfully");
+    } catch (e) {
+      if (e instanceof AxiosError) {
+        console.log(e);
+        showToast(toast, e.response?.data.message);
+      }
     }
   });
 };

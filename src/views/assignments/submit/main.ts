@@ -1,9 +1,10 @@
 import "../../../style.css";
 
 import { getAccessToken } from "../../../utils/token";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import sidebar from "../../../utils/sidebar";
 import checkAuth from "../../../utils/checkAuth";
+import { showToast } from "../../../utils/showToast";
 
 const sidebarElement = document.querySelector<HTMLElement>(".section-sidebar");
 const submitAssignmentUrl = document.querySelector<HTMLInputElement>("#url");
@@ -11,6 +12,8 @@ const submitButton = document.querySelector<HTMLButtonElement>("button");
 const submissionWrapper = document.querySelector<HTMLElement>(
   ".submission-wrapper"
 );
+const toast = document.getElementById("toast");
+
 const submissionForm =
   document.querySelector<HTMLFormElement>(".submission-form");
 
@@ -28,7 +31,7 @@ checkAuth();
 window.onload = async () => {
   sidebar(sidebarElement);
 
-  if (!submitAssignmentUrl || !submitButton) {
+  if (!submitAssignmentUrl || !submitButton || !toast) {
     return;
   }
 
@@ -89,13 +92,20 @@ window.onload = async () => {
       submissionUrl: submitAssignmentUrl?.value,
       assignmentId: assignmentId
     };
-    const res = await axios.post(submissionUrl, submissionData, {
-      headers: {
-        Authorization: `Bearer ${accessToken}`
-      }
-    });
-    if (res.status === 200) {
+
+    try {
+      await axios.post(submissionUrl, submissionData, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`
+        }
+      });
       window.location.href = "/views/assignments/";
+      showToast(toast, "Assignment submitted successfully");
+    } catch (e) {
+      if (e instanceof AxiosError) {
+        console.log(e);
+        showToast(toast, e.response?.data.message);
+      }
     }
   });
 };

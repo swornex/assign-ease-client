@@ -2,14 +2,16 @@ import "../../../style.css";
 
 import sidebar from "../../../utils/sidebar";
 import checkAuth from "../../../utils/checkAuth";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { getAccessToken } from "../../../utils/token";
+import { showToast } from "../../../utils/showToast";
 
 const sidebarElement = document.querySelector<HTMLElement>(".section-sidebar");
 const title = document.querySelector<HTMLInputElement>("#title");
 const description = document.querySelector<HTMLInputElement>("#description");
 const deadline = document.querySelector<HTMLInputElement>("#deadline");
 const editButton = document.querySelector<HTMLButtonElement>("button");
+const toast = document.getElementById("toast");
 
 const id = new URLSearchParams(window.location.search).get("assignmentId");
 
@@ -25,7 +27,7 @@ checkAuth();
 window.onload = async () => {
   sidebar(sidebarElement);
 
-  if (!title || !description || !deadline) {
+  if (!title || !description || !deadline || !toast) {
     return;
   }
 
@@ -50,14 +52,20 @@ window.onload = async () => {
       deadline: deadline?.value
     };
 
-    const res = await axios.patch(updateAssignmentUrl, assignmentData, {
-      headers: {
-        Authorization: `Bearer ${accessToken}`
-      }
-    });
+    try {
+      await axios.patch(updateAssignmentUrl, assignmentData, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`
+        }
+      });
 
-    if (res.status === 200) {
       window.location.href = "views/assignments/";
+      showToast(toast, "Assignment updated successfully");
+    } catch (e) {
+      if (e instanceof AxiosError) {
+        console.log(e);
+        showToast(toast, e.response?.data.message);
+      }
     }
   });
 };

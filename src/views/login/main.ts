@@ -1,7 +1,8 @@
 import "../../style.css";
 
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { decodeUserName, decodedRole } from "../../utils/decodeUser";
+import { showToast } from "../../utils/showToast";
 
 if (localStorage.getItem("token")) {
   window.location.href = "views/assignments/";
@@ -12,6 +13,8 @@ const password = document.querySelector<HTMLInputElement>("#password");
 const togglePassword = document.querySelector<HTMLAnchorElement>(
   ".password-toggle-icon"
 );
+
+const toast = document.getElementById("toast");
 
 const loginButton = document.querySelector<HTMLButtonElement>("button");
 
@@ -32,12 +35,26 @@ loginButton?.addEventListener("click", async (e) => {
     password: password?.value
   };
 
-  const res = await axios.post(loginUrl, userData);
+  try {
+    const res = await axios.post(loginUrl, userData);
 
-  if (res.status === 200) {
+    if (!toast) {
+      return;
+    }
+
     localStorage.setItem("token", res.data.data.accessToken);
+    showToast(toast, "Login Successful");
     decodeUserName();
     decodedRole();
     window.location.href = "views/assignments/";
+  } catch (e) {
+    if (!toast) {
+      return;
+    }
+
+    if (e instanceof AxiosError) {
+      console.log(e);
+      showToast(toast, e.response?.data.message);
+    }
   }
 });
